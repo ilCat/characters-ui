@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { FilterBar } from '../components/FilterBar';
-import { CharacterGrid } from '../components/CharacterGrid';
-import { INITIAL_CHARACTERS } from '../data/mockCharacters';
-import type { Character, SortOption } from '../types/character';
-import { characterService } from '../services/characterService';
+import { FilterBar } from '../../components/FilterBar/FilterBar';
+import { CharacterGrid } from '../../components/CharacterGrid/CharacterGrid';
+import { INITIAL_CHARACTERS } from '../../data/mockCharacters';
+import type { Character, SortOption } from '../../types/character';
+import { characterService } from '../../services/characterService';
 
 interface DashboardPageProps {
   onOpenCreateModalSignal?: boolean;
@@ -35,8 +35,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
   useEffect(() => {
     localStorage.setItem('characters-ui-data', JSON.stringify(characters));
   }, [characters]);
-
-
 
   const filteredCharacters = useMemo(() => {
     return characters
@@ -78,8 +76,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
       <CharacterGrid
         characters={filteredCharacters}
       />
-
-
     </>
   );
 };

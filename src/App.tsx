@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Header } from './components/Header';
-import { DashboardPage } from './pages/DashboardPage';
+import { Header } from './components/Header/Header';
+import { DashboardPage } from './pages/Dashboard/DashboardPage';
 import type { Character } from './types/character';
 import { INITIAL_CHARACTERS } from './data/mockCharacters';
 
