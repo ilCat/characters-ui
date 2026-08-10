@@ -4,6 +4,7 @@ export interface Stats {
   wins?: number;
   loses?: number;
   draws?: number;
+  [key: string]: number | undefined;
 }
 
 export interface Character {
@@ -12,11 +13,10 @@ export interface Character {
   height?: number | string;
   weight?: number | string;
   birthYear?: Date | string;
-  level: number;
-  avatar: string;
-  stats: Stats;
+  level?: number;
+  avatar?: string;
+  stats?: Stats;
   isFavorite: boolean;
-  createdAt: Date | string;
   teamId?: string;
 }
 
