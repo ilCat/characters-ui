@@ -5,12 +5,13 @@ import type { Character, SortOption } from '../../types/character';
 import { characterService } from '../../services/characterService';
 import { CharacterModal } from '../../components/CharacterModal/CharacterModal';
 import { CharacterFormModal } from '../../components/CharacterFormModal/CharacterFormModal';
-
+import { useAuth } from '../../context/AuthContext';
 interface DashboardPageProps {
   onOpenCreateModalSignal?: boolean;
 }
 
 export const DashboardPage: React.FC<DashboardPageProps> = () => {
+  const { user, loading, logout } = useAuth();
   const [characters, setCharacters] = useState<Character[]>([]);
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -22,16 +23,18 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
   const [editingCharacter, setEditingCharacter] = useState<Character | null>(null);
 
   useEffect(() => {
-    characterService
-      .getAll()
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setCharacters(data);
-        }
-      })
-      .catch((err) => {
-        console.warn('Backend not reached or error fetching characters, using local storage/mock data:', err);
-      });
+    if (user?.teamId) {
+      characterService
+        .getAllByTeam(user.teamId.toString())
+        .then((data) => {
+          if (Array.isArray(data) && data.length > 0) {
+            setCharacters(data);
+          }
+        })
+        .catch((err) => {
+          console.warn('Backend not reached or error fetching characters, using local storage/mock data:', err);
+        });
+    }
   }, []);
 
   const handleToggleFavorite = async (id: string, e?: React.MouseEvent) => {

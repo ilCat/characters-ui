@@ -12,6 +12,15 @@ export const characterService = {
     return res.json();
   },
 
+  // GET /api/characters/getAllByTeam/{team_id}
+  getAllByTeam: async (team_id: string): Promise<Character[]> => {
+    const res = await fetch(`${API_BASE}/api/character/getAllByTeam/${team_id}`);
+    if (!res.ok) {
+      throw new Error(`Failed to fetch characters: ${res.statusText}`);
+    }
+    return res.json();
+  },
+
   // GET /api/character/getById/:id
   getById: async (id: string): Promise<Character> => {
     const res = await fetch(`${API_BASE}/api/character/getById/${id}`);
@@ -36,9 +45,9 @@ export const characterService = {
     return res.json();
   },
 
-  // PUT /api/characters/:id
+  // PUT /api/character/update/:id
   update: async (id: string, character: Partial<Character>): Promise<Character> => {
-    const res = await fetch(`${API_BASE}/api/characters/${id}`, {
+    const res = await fetch(`${API_BASE}/api/character/update/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

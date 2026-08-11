@@ -61,6 +61,16 @@ export const CharacterFormModal: React.FC<CharacterFormModalProps> = ({
     onClose();
   };
 
+  const characterEditForm = [{ label: "Name", type: "text", value: formData.name, onChange: (e) => setFormData({ ...formData, name: e.target.value }) },
+  { label: "Height (cm)", type: "number", min: 150, max: 250, value: formData.height, onChange: (e) => setFormData({ ...formData, height: parseInt(e.target.value) || 150 }) },
+  { label: "Weight (kg)", type: "number", min: 30, max: 200, value: formData.weight, onChange: (e) => setFormData({ ...formData, weight: parseInt(e.target.value) || 30 }) },
+  { label: "Birth Year", type: "number", min: 1900, max: 2009, value: formData.birthYear, onChange: (e) => setFormData({ ...formData, birthYear: e.target.value || 1994 }) },
+  { label: "Level", type: "number", min: 1, max: 100, value: formData.level, onChange: (e) => setFormData({ ...formData, level: parseInt(e.target.value) || 1 }) },
+  { label: "Avatar", type: "url", value: formData.avatar, onChange: (e) => setFormData({ ...formData, avatar: e.target.value }) },
+  { label: "Wins", type: "number", min: 0, max: 1000, value: formData.stats.wins, onChange: (e) => setFormData({ ...formData, stats: { wins: parseInt(e.target.value) || 0, loses: formData.stats.loses, draws: formData.stats.draws } }) },
+  { label: "Loses", type: "number", min: 0, max: 1000, value: formData.stats.loses, onChange: (e) => setFormData({ ...formData, stats: { wins: formData.stats.wins, loses: parseInt(e.target.value) || 0, draws: formData.stats.draws } }) },
+  { label: "Draws", type: "number", min: 0, max: 1000, value: formData.stats.draws, onChange: (e) => setFormData({ ...formData, stats: { wins: formData.stats.wins, loses: formData.stats.loses, draws: parseInt(e.target.value) || 0 } }) }
+  ]
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
@@ -79,8 +89,21 @@ export const CharacterFormModal: React.FC<CharacterFormModalProps> = ({
 
         <form onSubmit={handleSubmit} className={styles.modalBody}>
           <div className={styles.formGrid}>
-
-            <div className={styles.formGroup}>
+            {characterEditForm.map((item, index) => (
+              <div key={index} className={styles.formGroup}>
+                <label className={styles.formLabel}>{item.label}</label>
+                <input
+                  className={styles.formInput}
+                  disabled={editingCharacter && (item.label === "Name" || item.label === "Height (cm)" || item.label === "Weight (kg)" || item.label === "Birth Year")}
+                  type={item.type}
+                  min={item?.min}
+                  max={item?.max}
+                  value={item?.value}
+                  onChange={item.onChange}
+                />
+              </div>
+            ))}
+            {/* <div className={styles.formGroup}>
               <label className={styles.formLabel}>Level (1 - 100)</label>
               <input
                 type="number"
@@ -107,11 +130,12 @@ export const CharacterFormModal: React.FC<CharacterFormModalProps> = ({
               <label className={styles.formLabel}>Wins *</label>
               <input
                 type="number"
+                min="0"
+                max="1000"
                 required
                 className={styles.formInput}
-                placeholder="0"
-                value={formData.stats?.wins || ''}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                value={formData.stats?.wins || 0}
+                onChange={(e) => setFormData({ ...formData, stats: { wins: parseInt(e.target.value) } })}
               />
             </div>
 
@@ -119,11 +143,12 @@ export const CharacterFormModal: React.FC<CharacterFormModalProps> = ({
               <label className={styles.formLabel}>Loses *</label>
               <input
                 type="number"
+                min="0"
+                max="1000"
                 required
                 className={styles.formInput}
-                placeholder="0"
-                value={formData.stats?.loses || ''}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                value={formData.stats?.loses || 0}
+                onChange={(e) => setFormData({ ...formData, stats: { loses: parseInt(e.target.value) } })}
               />
             </div>
 
@@ -131,13 +156,14 @@ export const CharacterFormModal: React.FC<CharacterFormModalProps> = ({
               <label className={styles.formLabel}>Draws *</label>
               <input
                 type="number"
+                min="0"
+                max="1000"
                 required
                 className={styles.formInput}
-                placeholder="0"
-                value={formData.stats?.draws || ''}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                value={formData.stats?.draws || 0}
+                onChange={(e) => setFormData({ ...formData, stats: { draws: parseInt(e.target.value) } })}
               />
-            </div>
+            </div> */}
 
           </div>
 

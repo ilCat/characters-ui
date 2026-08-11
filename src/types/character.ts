@@ -12,7 +12,7 @@ export interface Character {
   name: string;
   height?: number | string;
   weight?: number | string;
-  birthYear?: Date | string;
+  birthYear?: number | string;
   level?: number;
   avatar?: string;
   stats?: Stats;
