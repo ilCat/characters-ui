@@ -7,7 +7,7 @@ import styles from './CharacterGrid.module.css';
 interface CharacterGridProps {
   characters: Character[];
   onSelectCharacter?: (character: Character) => void;
-  onToggleFavorite?: (id: string, e: React.MouseEvent) => void;
+  onToggleFavorite?: (id: number, e: React.MouseEvent) => void;
   onResetFilters?: () => void;
   onOpenCreateModal?: () => void;
 }
@@ -27,16 +27,16 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({
         </div>
         <h2>No Characters Found</h2>
         <p style={{ color: 'var(--text-muted)', maxWidth: 420 }}>
-          No heroes match your active filter parameters or search query. Try adjusting your filters or add a new hero!
+          No character match your active filter parameters or search query. Try adjusting your filters or add a new one!
         </p>
         <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
           {onResetFilters && (
-            <button className={styles.btnSecondary} onClick={onResetFilters} type="button">
+            <button className="btn-secondary" onClick={onResetFilters} type="button">
               Reset Filters
             </button>
           )}
           {onOpenCreateModal && (
-            <button className={styles.btnPrimary} onClick={onOpenCreateModal} type="button">
+            <button className="btn-primary" onClick={onOpenCreateModal} type="button">
               <PlusCircle size={16} />
               Create Character
             </button>
@@ -48,9 +48,9 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({
 
   return (
     <div className={styles.characterGrid}>
-      {characters.map((char) => (
+      {characters.map((char, index) => (
         <CharacterCard
-          key={char.id}
+          key={char.id !== undefined && char.id !== null ? char.id : `char-${index}`}
           character={char}
           onSelect={onSelectCharacter}
           onToggleFavorite={onToggleFavorite}

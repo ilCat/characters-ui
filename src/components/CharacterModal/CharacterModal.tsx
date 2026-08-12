@@ -6,9 +6,9 @@ import styles from './CharacterModal.module.css';
 interface CharacterModalProps {
   character: Character | null;
   onClose: () => void;
-  onToggleFavorite: (id: string) => void;
+  onToggleFavorite: (id: number) => void;
   onEdit: (character: Character) => void;
-  onDelete: (id: string) => void;
+  onDelete: (id: number) => void;
 }
 
 export const CharacterModal: React.FC<CharacterModalProps> = ({
@@ -39,19 +39,19 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
             <div style={{ display: 'flex', gap: 10 }}>
               <button
-                className={`${styles.btnSecondary} ${character.isFavorite ? 'active' : ''}`}
+                className={`btn-secondary ${character.isFavorite ? 'active' : ''}`}
                 onClick={() => onToggleFavorite(character.id)}
                 type="button"
               >
                 <Star size={16} fill={character.isFavorite ? '#ef4444' : 'none'} color={character.isFavorite ? '#ef4444' : 'currentColor'} />
                 {character.isFavorite ? 'Favorited' : 'Favorite'}
               </button>
-              <button className={styles.btnSecondary} onClick={() => onEdit(character)} type="button">
+              <button className="btn-secondary" onClick={() => onEdit(character)} type="button">
                 <Edit size={16} />
                 Edit
               </button>
               <button
-                className={styles.btnSecondary}
+                className="btn-secondary"
                 style={{ color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.3)' }}
                 onClick={() => onDelete(character.id)}
                 type="button"

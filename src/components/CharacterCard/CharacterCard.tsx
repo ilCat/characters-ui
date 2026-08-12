@@ -6,7 +6,7 @@ import styles from './CharacterCard.module.css';
 interface CharacterCardProps {
   character: Character;
   onSelect?: (character: Character) => void;
-  onToggleFavorite?: (id: string, e: React.MouseEvent) => void;
+  onToggleFavorite?: (id: number, e: React.MouseEvent) => void;
 }
 
 export const CharacterCard: React.FC<CharacterCardProps> = ({

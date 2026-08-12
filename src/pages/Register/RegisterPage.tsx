@@ -5,6 +5,8 @@ import type { User } from '../../types/auth';
 import { useAuth } from '../../context/AuthContext';
 import styles from './RegisterPage.module.css';
 
+import { useNotification } from '../../context/NotificationContext';
+
 interface RegisterPageProps {
   onRegisterSuccess?: (user: User) => void;
 }
@@ -12,6 +14,7 @@ interface RegisterPageProps {
 export const RegisterPage: React.FC<RegisterPageProps> = ({ onRegisterSuccess }) => {
   const navigate = useNavigate();
   const { register } = useAuth();
+  const { showError, showSuccess } = useNotification();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,17 +26,23 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onRegisterSuccess })
     e.preventDefault();
 
     if (!username.trim() || !email.trim() || !password) {
-      setError('Please fill in all required fields.');
+      const msg = 'Please fill in all required fields.';
+      setError(msg);
+      showError(msg);
       return;
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters long.');
+      const msg = 'Password must be at least 6 characters long.';
+      setError(msg);
+      showError(msg);
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match. Please try again.');
+      const msg = 'Passwords do not match. Please try again.';
+      setError(msg);
+      showError(msg);
       return;
     }
 
@@ -49,13 +58,12 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onRegisterSuccess })
       if (onRegisterSuccess) {
         onRegisterSuccess(user);
       }
+      showSuccess('Account created successfully!');
       navigate('/dashboard');
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('An unexpected error occurred while creating your account.');
-      }
+      const msg = err instanceof Error ? err.message : 'An unexpected error occurred while creating your account.';
+      setError(msg);
+      showError(msg);
     } finally {
       setIsLoading(false);
     }

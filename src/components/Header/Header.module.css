@@ -78,48 +78,6 @@
   }
 }
 
-/* Button Styles */
-.btnPrimary {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 18px;
-  background: var(--accent-yellow);
-  color: #111827;
-  font-weight: 700;
-  font-size: 0.9rem;
-  border: none;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: var(--transition-fast);
-}
-
-.btnPrimary:hover {
-  background: #e6d700;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 239, 0, 0.25);
-}
-
-.btnSecondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 18px;
-  background: var(--bg-glass);
-  border: 1px solid var(--bg-glass-border);
-  color: var(--text-main);
-  font-weight: 600;
-  font-size: 0.9rem;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: var(--transition-fast);
-}
-
-.btnSecondary:hover {
-  background: var(--bg-card-hover);
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
 /* User Profile Badge */
 .userProfileBadge {
   display: flex;

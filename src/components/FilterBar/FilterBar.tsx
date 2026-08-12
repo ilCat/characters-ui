@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, SortAsc, Star } from 'lucide-react';
+import { PlusCircle, Search, SortAsc, Star } from 'lucide-react';
 import type { SortOption } from '../../types/character';
 import styles from './FilterBar.module.css';
 
@@ -10,6 +10,7 @@ interface FilterBarProps {
   onSortChange: (sort: SortOption) => void;
   showFavoritesOnly: boolean;
   onToggleFavorites: () => void;
+  onOpenCreateModal?: () => void;
 }
 
 export const FilterBar: React.FC<FilterBarProps> = ({
@@ -19,10 +20,14 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   onSortChange,
   showFavoritesOnly,
   onToggleFavorites,
+  onOpenCreateModal
 }) => {
   return (
     <div className={styles.filterBar}>
       <div className={styles.filterTopRow}>
+        <button className="btn-primary" onClick={onOpenCreateModal} >
+          <PlusCircle size={16} />
+        </button>
         <div className={styles.searchWrapper}>
           <Search size={18} className={styles.searchIcon} />
           <input
@@ -36,7 +41,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
 
         <div className={styles.selectGroup}>
           <button
-            className={styles.btnSecondary}
+            className="btn-secondary"
             onClick={onToggleFavorites}
             style={{
               borderColor: showFavoritesOnly ? '#ef4444' : undefined,

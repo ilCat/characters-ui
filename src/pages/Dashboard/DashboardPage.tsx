@@ -6,12 +6,16 @@ import { characterService } from '../../services/characterService';
 import { CharacterModal } from '../../components/CharacterModal/CharacterModal';
 import { CharacterFormModal } from '../../components/CharacterFormModal/CharacterFormModal';
 import { useAuth } from '../../context/AuthContext';
+import { Header } from '../../components/Header/Header';
+import { useNotification } from '../../context/NotificationContext';
+
 interface DashboardPageProps {
   onOpenCreateModalSignal?: boolean;
 }
 
 export const DashboardPage: React.FC<DashboardPageProps> = () => {
   const { user, loading, logout } = useAuth();
+  const { showError, showSuccess } = useNotification();
   const [characters, setCharacters] = useState<Character[]>([]);
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -23,21 +27,26 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
   const [editingCharacter, setEditingCharacter] = useState<Character | null>(null);
 
   useEffect(() => {
-    if (user?.teamId) {
-      characterService
-        .getAllByTeam(user.teamId.toString())
-        .then((data) => {
-          if (Array.isArray(data) && data.length > 0) {
-            setCharacters(data);
-          }
-        })
-        .catch((err) => {
-          console.warn('Backend not reached or error fetching characters, using local storage/mock data:', err);
-        });
-    }
-  }, []);
+    if (!user?.ownedTeamId) return;
 
-  const handleToggleFavorite = async (id: string, e?: React.MouseEvent) => {
+    const fetchCharacters = async () => {
+      const teamId = user?.ownedTeamId;
+      try {
+        const data = teamId
+          ? await characterService.getAllByTeam(teamId)
+          : await characterService.getAll();
+        if (Array.isArray(data)) {
+          setCharacters(data);
+        }
+      } catch (err) {
+        showError(err instanceof Error ? err.message : 'Failed to fetch characters');
+      }
+    };
+
+    fetchCharacters();
+  }, [user?.ownedTeamId, showError]);
+
+  const handleToggleFavorite = async (id: number, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     const char = characters.find((c) => c.id === id);
     const updatedFav = char ? !char.isFavorite : true;
@@ -52,37 +61,50 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
     try {
       await characterService.update(id, { isFavorite: updatedFav });
     } catch (err) {
-      console.warn('Could not sync favorite toggle to backend:', err);
+      showError(err instanceof Error ? err.message : 'Failed to update favorite status');
     }
   };
 
-  const handleSaveCharacter = async (char: Character) => {
-    if (editingCharacter) {
-      setCharacters((prev) => prev.map((c) => (c.id === char.id ? char : c)));
-      setSelectedCharacter(char);
+  const handleSaveCharacter = async (char: Partial<Character>) => {
+    const teamId = user?.ownedTeamId;
+    if (editingCharacter && editingCharacter.id) {
       try {
-        await characterService.update(char.id, char);
+        const updatedCharacter = await characterService.update(editingCharacter.id, char);
+        setCharacters((prev) =>
+          prev.map((c) => (c.id === editingCharacter.id ? { ...c, ...updatedCharacter } : c))
+        );
+        setSelectedCharacter((prev) =>
+          prev && prev.id === editingCharacter.id ? { ...prev, ...updatedCharacter } : prev
+        );
+        showSuccess('Character updated successfully!');
       } catch (err) {
-        console.warn('Could not sync update to backend:', err);
+        showError(err instanceof Error ? err.message : 'Failed to update character');
       }
     } else {
-      setCharacters((prev) => [char, ...prev]);
       try {
-        await characterService.create(char);
+        const payload = {
+          ...char,
+          teamId: teamId || char.teamId,
+        };
+        const newCharacter = await characterService.create(payload as any);
+        setCharacters((prev) => [newCharacter, ...prev]);
+        setSelectedCharacter(newCharacter);
+        showSuccess('Character created successfully!');
       } catch (err) {
-        console.warn('Could not sync new character to backend:', err);
+        showError(err instanceof Error ? err.message : 'Failed to create character');
       }
     }
     setEditingCharacter(null);
   };
 
-  const handleDeleteCharacter = async (id: string) => {
+  const handleDeleteCharacter = async (id: number) => {
     setCharacters((prev) => prev.filter((c) => c.id !== id));
     setSelectedCharacter(null);
     try {
       await characterService.delete(id);
+      showSuccess('Character deleted successfully!');
     } catch (err) {
-      console.warn('Could not sync delete to backend:', err);
+      showError(err instanceof Error ? err.message : 'Failed to delete character');
     }
   };
 
@@ -120,6 +142,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
 
   return (
     <>
+      <Header
+        characters={characters}
+        user={user}
+        onLogout={logout}
+      />
       <FilterBar
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -127,6 +154,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
         onSortChange={setSortOption}
         showFavoritesOnly={showFavoritesOnly}
         onToggleFavorites={() => setShowFavoritesOnly(!showFavoritesOnly)}
+        onOpenCreateModal={() => {
+          setEditingCharacter(null);
+          setIsFormOpen(true);
+        }}
       />
 
       <CharacterGrid

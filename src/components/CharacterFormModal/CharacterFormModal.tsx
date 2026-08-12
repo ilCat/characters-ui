@@ -42,19 +42,20 @@ export const CharacterFormModal: React.FC<CharacterFormModalProps> = ({
     if (!formData.name) return;
 
     const newChar: Partial<Character> = {
+      ...(formData.id ? { id: formData.id } : {}),
       name: formData.name,
       level: Number(formData.level) || 1,
+      height: Number(formData.height) || 170,
+      weight: Number(formData.weight) || 70,
+      birthYear: Number(formData.birthYear) || 1995,
       avatar: formData.avatar || null,
       stats: {
-        wins: editingCharacter?.stats?.wins ?? 0,
-        loses: editingCharacter?.stats?.loses ?? 0,
-        draws: editingCharacter?.stats?.draws ?? 0,
+        wins: Number(formData.stats?.wins) || 0,
+        loses: Number(formData.stats?.loses) || 0,
+        draws: Number(formData.stats?.draws) || 0,
       },
-      isFavorite: editingCharacter?.isFavorite || false,
-      height: formData.height,
-      weight: formData.weight,
-      birthYear: formData.birthYear,
-      teamId: formData.teamId,
+      isFavorite: formData.isFavorite || false,
+      ...(formData.teamId ? { teamId: formData.teamId } : {}),
     };
 
     onSave(newChar);
@@ -103,75 +104,15 @@ export const CharacterFormModal: React.FC<CharacterFormModalProps> = ({
                 />
               </div>
             ))}
-            {/* <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Level (1 - 100)</label>
-              <input
-                type="number"
-                min="1"
-                max="100"
-                className={styles.formInput}
-                value={formData.level || 1}
-                onChange={(e) => setFormData({ ...formData, level: parseInt(e.target.value) || 1 })}
-              />
-            </div>
 
-            <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Avatar Image URL</label>
-              <input
-                type="url"
-                className={styles.formInput}
-                placeholder="https://..."
-                value={formData.avatar || ''}
-                onChange={(e) => setFormData({ ...formData, avatar: e.target.value })}
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Wins *</label>
-              <input
-                type="number"
-                min="0"
-                max="1000"
-                required
-                className={styles.formInput}
-                value={formData.stats?.wins || 0}
-                onChange={(e) => setFormData({ ...formData, stats: { wins: parseInt(e.target.value) } })}
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Loses *</label>
-              <input
-                type="number"
-                min="0"
-                max="1000"
-                required
-                className={styles.formInput}
-                value={formData.stats?.loses || 0}
-                onChange={(e) => setFormData({ ...formData, stats: { loses: parseInt(e.target.value) } })}
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Draws *</label>
-              <input
-                type="number"
-                min="0"
-                max="1000"
-                required
-                className={styles.formInput}
-                value={formData.stats?.draws || 0}
-                onChange={(e) => setFormData({ ...formData, stats: { draws: parseInt(e.target.value) } })}
-              />
-            </div> */}
 
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 10 }}>
-            <button type="button" className={styles.btnSecondary} onClick={onClose}>
+            <button type="button" className="btn-secondary" onClick={onClose}>
               Cancel
             </button>
-            <button type="submit" className={styles.btnPrimary}>
+            <button type="submit" className="btn-primary">
               <Save size={16} />
               {editingCharacter ? 'Save Changes' : 'Create Character'}
             </button>
