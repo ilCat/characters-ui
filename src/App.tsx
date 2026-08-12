@@ -6,6 +6,7 @@ import { LoginPage } from './pages/Login/LoginPage';
 import { RegisterPage } from './pages/Register/RegisterPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import type { Character } from './types/character';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 const AppContent: React.FC = () => {
   const { user, loading, logout } = useAuth();
@@ -27,10 +28,12 @@ const AppContent: React.FC = () => {
         onLogout={logout}
       />
       <Routes>
-        <Route path="/" element={<DashboardPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route element={<ProtectedRoute user={user} />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+        </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>

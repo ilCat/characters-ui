@@ -29,7 +29,7 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({
 
         <div className={styles.modalHero}>
           <img
-            src={character.avatar}
+            src={character.avatar || '/default-character.svg'}
             alt={character.name}
             className={styles.modalHeroImg}
           />

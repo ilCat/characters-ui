@@ -5,7 +5,9 @@ const API_BASE = import.meta.env.VITE_API_URL || '';
 export const characterService = {
   // GET /api/characters
   getAll: async (): Promise<Character[]> => {
-    const res = await fetch(`${API_BASE}/api/character/getAll`);
+    const res = await fetch(`${API_BASE}/api/character/getAll`, {
+      credentials: 'include',
+    });
     if (!res.ok) {
       throw new Error(`Failed to fetch characters: ${res.statusText}`);
     }
@@ -14,7 +16,9 @@ export const characterService = {
 
   // GET /api/characters/getAllByTeam/{team_id}
   getAllByTeam: async (team_id: string): Promise<Character[]> => {
-    const res = await fetch(`${API_BASE}/api/character/getAllByTeam/${team_id}`);
+    const res = await fetch(`${API_BASE}/api/character/getAllByTeam/${team_id}`, {
+      credentials: 'include',
+    });
     if (!res.ok) {
       throw new Error(`Failed to fetch characters: ${res.statusText}`);
     }
@@ -23,7 +27,9 @@ export const characterService = {
 
   // GET /api/character/getById/:id
   getById: async (id: string): Promise<Character> => {
-    const res = await fetch(`${API_BASE}/api/character/getById/${id}`);
+    const res = await fetch(`${API_BASE}/api/character/getById/${id}`, {
+      credentials: 'include',
+    });
     if (!res.ok) {
       throw new Error(`Failed to fetch character ${id}: ${res.statusText}`);
     }
@@ -31,13 +37,14 @@ export const characterService = {
   },
 
   // POST /api/character/add
-  create: async (character: Omit<Character, 'id' | 'createdAt'>): Promise<Character> => {
+  create: async (character: Omit<Character, 'id'>): Promise<Character> => {
     const res = await fetch(`${API_BASE}/api/character/add`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(character),
+      credentials: 'include',
     });
     if (!res.ok) {
       throw new Error(`Failed to create character: ${res.statusText}`);
@@ -53,6 +60,7 @@ export const characterService = {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(character),
+      credentials: 'include',
     });
     if (!res.ok) {
       throw new Error(`Failed to update character ${id}: ${res.statusText}`);
@@ -67,6 +75,7 @@ export const characterService = {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
     });
     if (!res.ok) {
       throw new Error(`Failed to delete character ${id}: ${res.statusText}`);

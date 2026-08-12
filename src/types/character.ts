@@ -17,7 +17,7 @@ export interface Character {
   avatar?: string;
   stats?: Stats;
   isFavorite: boolean;
-  teamId?: string;
+  teamId?: number;
 }
 
 export type SortOption = 'level-desc' | 'name-asc' | 'name-desc';

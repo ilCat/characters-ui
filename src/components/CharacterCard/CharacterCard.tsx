@@ -20,7 +20,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
       onClick={() => onSelect && onSelect(character)}
     >
       <div className={styles.cardImageWrapper}>
-        <img src={character.avatar} alt={character.name} className={styles.cardImg} />
+        <img src={character.avatar || '/default-character.svg'} alt={character.name} className={styles.cardImg} />
         <div className={styles.cardOverlay} />
 
         <button

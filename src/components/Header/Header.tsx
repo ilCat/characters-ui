@@ -61,13 +61,7 @@ export const Header: React.FC<HeaderProps> = ({
             )}
 
             <div className={styles.userProfileBadge}>
-              {user.avatar ? (
-                <img src={user.avatar} alt={user.username} className={styles.userAvatar} />
-              ) : (
-                <div className={styles.userAvatarPlaceholder}>
-                  <UserIcon size={16} />
-                </div>
-              )}
+              <img src={user.avatar || '/default-user.svg'} alt={user.username} className={styles.userAvatar} />
               <div className={styles.userInfo}>
                 <span className={styles.userName}>{user.username}</span>
                 <span className={styles.userRole}>{user.role || 'Usuario'}</span>

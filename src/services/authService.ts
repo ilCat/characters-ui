@@ -8,7 +8,9 @@ const API_BASE = import.meta.env.VITE_API_URL || '';
 export const authService = {
   getCurrentUser: async (): Promise<User> => {
     // const data = localStorage.getItem(STORAGE_KEY_USER);
-    const data = await fetch(`${API_BASE}/api/auth/me`);
+    const data = await fetch(`${API_BASE}/api/auth/me`, {
+      credentials: 'include',
+    });
     if (!data.ok) return null;
     try {
       return data.json();
@@ -24,6 +26,7 @@ export const authService = {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(credentials),
+      credentials: 'include',
     });
     if (!res.ok) {
       throw new Error(`Failed to login: ${res.statusText}`);
@@ -42,6 +45,7 @@ export const authService = {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(credentials),
+      credentials: 'include',
     });
     if (!res.ok) {
       throw new Error(`Failed to register: ${res.statusText}`);
@@ -53,6 +57,7 @@ export const authService = {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(credentials),
+      credentials: 'include',
     });
     if (!user.ok) {
       throw new Error(`Failed to login: ${user.statusText}`);
@@ -66,6 +71,7 @@ export const authService = {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
     });
     if (!res.ok) {
       throw new Error(`Failed to logout: ${res.statusText}`);
