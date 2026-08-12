@@ -8,9 +8,11 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import type { Character } from './types/character';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
+import { NotificationProvider } from './context/NotificationContext';
+import { NotificationBar } from './components/NotificationBar/NotificationBar';
+
 const AppContent: React.FC = () => {
-  const { user, loading, logout } = useAuth();
-  const characters: Character[] = [];
+  const { user, loading } = useAuth();
 
   if (loading) {
     return (
@@ -22,11 +24,7 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="app-container">
-      <Header
-        characters={characters}
-        user={user}
-        onLogout={logout}
-      />
+      <NotificationBar />
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -44,7 +42,9 @@ export const App: React.FC = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AppContent />
+        <NotificationProvider>
+          <AppContent />
+        </NotificationProvider>
       </AuthProvider>
     </BrowserRouter>
   );

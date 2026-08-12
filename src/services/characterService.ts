@@ -1,6 +1,5 @@
 import type { Character } from '../types/character';
-
-const API_BASE = import.meta.env.VITE_API_URL || '';
+import { API_BASE, parseApiError } from './utils';
 
 export const characterService = {
   // GET /api/characters
@@ -9,18 +8,20 @@ export const characterService = {
       credentials: 'include',
     });
     if (!res.ok) {
-      throw new Error(`Failed to fetch characters: ${res.statusText}`);
+      const errorMsg = await parseApiError(res, 'Failed to fetch characters');
+      throw new Error(errorMsg);
     }
     return res.json();
   },
 
   // GET /api/characters/getAllByTeam/{team_id}
-  getAllByTeam: async (team_id: string): Promise<Character[]> => {
+  getAllByTeam: async (team_id: number): Promise<Character[]> => {
     const res = await fetch(`${API_BASE}/api/character/getAllByTeam/${team_id}`, {
       credentials: 'include',
     });
     if (!res.ok) {
-      throw new Error(`Failed to fetch characters: ${res.statusText}`);
+      const errorMsg = await parseApiError(res, 'Failed to fetch characters');
+      throw new Error(errorMsg);
     }
     return res.json();
   },
@@ -31,7 +32,8 @@ export const characterService = {
       credentials: 'include',
     });
     if (!res.ok) {
-      throw new Error(`Failed to fetch character ${id}: ${res.statusText}`);
+      const errorMsg = await parseApiError(res, `Failed to fetch character ${id}`);
+      throw new Error(errorMsg);
     }
     return res.json();
   },
@@ -47,13 +49,14 @@ export const characterService = {
       credentials: 'include',
     });
     if (!res.ok) {
-      throw new Error(`Failed to create character: ${res.statusText}`);
+      const errorMsg = await parseApiError(res, 'Failed to create character');
+      throw new Error(errorMsg);
     }
     return res.json();
   },
 
   // PUT /api/character/update/:id
-  update: async (id: string, character: Partial<Character>): Promise<Character> => {
+  update: async (id: number, character: Partial<Character>): Promise<Character> => {
     const res = await fetch(`${API_BASE}/api/character/update/${id}`, {
       method: 'PUT',
       headers: {
@@ -63,13 +66,14 @@ export const characterService = {
       credentials: 'include',
     });
     if (!res.ok) {
-      throw new Error(`Failed to update character ${id}: ${res.statusText}`);
+      const errorMsg = await parseApiError(res, `Failed to update character ${id}`);
+      throw new Error(errorMsg);
     }
     return res.json();
   },
 
   // DELETE /api/character/delete/:id
-  delete: async (id: string): Promise<void> => {
+  delete: async (id: number): Promise<void> => {
     const res = await fetch(`${API_BASE}/api/character/delete/${id}`, {
       method: 'DELETE',
       headers: {
@@ -78,7 +82,8 @@ export const characterService = {
       credentials: 'include',
     });
     if (!res.ok) {
-      throw new Error(`Failed to delete character ${id}: ${res.statusText}`);
+      const errorMsg = await parseApiError(res, `Failed to delete character ${id}`);
+      throw new Error(errorMsg);
     }
   },
 };

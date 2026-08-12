@@ -8,7 +8,7 @@ export interface Stats {
 }
 
 export interface Character {
-  id: string;
+  id: number;
   name: string;
   height?: number | string;
   weight?: number | string;

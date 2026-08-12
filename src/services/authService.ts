@@ -1,13 +1,9 @@
 import type { User, LoginCredentials, RegisterCredentials } from '../types/auth';
+import { API_BASE, parseApiError } from './utils';
 
-// const STORAGE_KEY_USER = 'user_id';
-// const STORAGE_KEY_TEAM = 'team_id';
-
-const API_BASE = import.meta.env.VITE_API_URL || '';
 
 export const authService = {
   getCurrentUser: async (): Promise<User> => {
-    // const data = localStorage.getItem(STORAGE_KEY_USER);
     const data = await fetch(`${API_BASE}/api/auth/me`, {
       credentials: 'include',
     });
@@ -29,12 +25,18 @@ export const authService = {
       credentials: 'include',
     });
     if (!res.ok) {
-      throw new Error(`Failed to login: ${res.statusText}`);
+      const errorMsg = await parseApiError(res, 'Failed to login');
+      throw new Error(errorMsg);
     }
-    // const { password: _password, ...cleanUser } = user;
-    // localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(cleanUser));
-    // return cleanUser;
-    return res.json();
+    const data = await fetch(`${API_BASE}/api/auth/me`, {
+      credentials: 'include',
+    });
+    if (!data.ok) return null;
+    try {
+      return data.json();
+    } catch {
+      return null;
+    }
   },
 
   register: async (credentials: RegisterCredentials): Promise<User> => {
@@ -48,7 +50,8 @@ export const authService = {
       credentials: 'include',
     });
     if (!res.ok) {
-      throw new Error(`Failed to register: ${res.statusText}`);
+      const errorMsg = await parseApiError(res, 'Failed to register');
+      throw new Error(errorMsg);
     }
     // Login User
     const user = await fetch(`${API_BASE}/api/auth/login`, {
@@ -60,7 +63,8 @@ export const authService = {
       credentials: 'include',
     });
     if (!user.ok) {
-      throw new Error(`Failed to login: ${user.statusText}`);
+      const errorMsg = await parseApiError(user, 'Failed to login after registration');
+      throw new Error(errorMsg);
     }
     return user.json();
   },
@@ -74,7 +78,8 @@ export const authService = {
       credentials: 'include',
     });
     if (!res.ok) {
-      throw new Error(`Failed to logout: ${res.statusText}`);
+      const errorMsg = await parseApiError(res, 'Failed to logout');
+      throw new Error(errorMsg);
     }
   },
 };

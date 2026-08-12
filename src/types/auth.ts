@@ -1,10 +1,10 @@
 export interface User {
-  id: string;
-  username: string;
+  id: number;
+  name?: string;
   email: string;
   avatar?: string;
   role?: string;
-  teamId?: string;
+  ownedTeamId?: number;
 }
 
 export interface LoginCredentials {
