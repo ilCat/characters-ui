@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { FilterBar } from '../../components/FilterBar/FilterBar';
+import { FilterBar, type OwnerOption } from '../../components/FilterBar/FilterBar';
 import { CharacterGrid } from '../../components/CharacterGrid/CharacterGrid';
 import type { Character, SortOption } from '../../types/character';
 import { characterService } from '../../services/characterService';
@@ -11,13 +11,14 @@ import { useNotification } from '../../context/NotificationContext';
 import { ROLES } from '../../services/utils';
 
 export const DashboardPage: React.FC = () => {
-  const { user, loading, logout } = useAuth();
+  const { user, logout } = useAuth();
   const { showError, showSuccess } = useNotification();
   const [characters, setCharacters] = useState<Character[]>([]);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState<SortOption>('level-desc');
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const [selectedOwner, setSelectedOwner] = useState<string>('all');
 
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -40,7 +41,18 @@ export const DashboardPage: React.FC = () => {
     };
 
     fetchCharacters();
-  }, [user?.ownedTeamId, showError]);
+  }, [user?.role, user?.ownedTeamId, showError]);
+
+  const ownersOptions = useMemo<OwnerOption[]>(() => {
+    const map = new Map<string, string>();
+    characters.forEach((char) => {
+      if (char.ownerName) {
+        const id = char.ownerId !== undefined ? String(char.ownerId) : char.ownerName;
+        map.set(id, char.ownerName);
+      }
+    });
+    return Array.from(map.entries()).map(([id, name]) => ({ id, name }));
+  }, [characters]);
 
   const handleToggleFavorite = async (id: number, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
@@ -108,6 +120,7 @@ export const DashboardPage: React.FC = () => {
     setSearchQuery('');
     setSortOption('level-desc');
     setShowFavoritesOnly(false);
+    setSelectedOwner('all');
   };
 
   const filteredCharacters = useMemo(() => {
@@ -115,26 +128,38 @@ export const DashboardPage: React.FC = () => {
       .filter((char) => {
         if (showFavoritesOnly && !char.isFavorite) return false;
 
+        if (selectedOwner !== 'all') {
+          const matchesOwner =
+            (char.ownerId !== undefined && String(char.ownerId) === selectedOwner) ||
+            char.ownerName === selectedOwner;
+          if (!matchesOwner) return false;
+        }
+
         if (searchQuery.trim()) {
           const q = searchQuery.toLowerCase();
           const matchName = char.name.toLowerCase().includes(q);
-          if (!matchName) return false;
+          const matchOwner = char.ownerName ? char.ownerName.toLowerCase().includes(q) : false;
+          if (!matchName && !matchOwner) return false;
         }
         return true;
       })
       .sort((a, b) => {
         switch (sortOption) {
           case 'level-desc':
-            return b.level - a.level;
+            return (b.level ?? 0) - (a.level ?? 0);
           case 'name-asc':
             return a.name.localeCompare(b.name);
           case 'name-desc':
             return b.name.localeCompare(a.name);
+          case 'owner-asc':
+            return (a.ownerName || '').localeCompare(b.ownerName || '');
+          case 'owner-desc':
+            return (b.ownerName || '').localeCompare(a.ownerName || '');
           default:
             return 0;
         }
       });
-  }, [characters, searchQuery, sortOption, showFavoritesOnly]);
+  }, [characters, searchQuery, sortOption, showFavoritesOnly, selectedOwner]);
 
   return (
     <>
@@ -150,6 +175,9 @@ export const DashboardPage: React.FC = () => {
         onSortChange={setSortOption}
         showFavoritesOnly={showFavoritesOnly}
         onToggleFavorites={() => setShowFavoritesOnly(!showFavoritesOnly)}
+        owners={ownersOptions}
+        selectedOwner={selectedOwner}
+        onOwnerChange={setSelectedOwner}
         onOpenCreateModal={() => {
           setEditingCharacter(null);
           setIsFormOpen(true);

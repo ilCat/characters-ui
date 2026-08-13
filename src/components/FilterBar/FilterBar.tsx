@@ -1,7 +1,14 @@
 import React from 'react';
-import { PlusCircle, Search, SortAsc, Star } from 'lucide-react';
+import { PlusCircle, Search, SortAsc, Star, User } from 'lucide-react';
 import type { SortOption } from '../../types/character';
 import styles from './FilterBar.module.css';
+import { useAuth } from '../../context/AuthContext';
+import { ROLES } from '../../services/utils';
+
+export interface OwnerOption {
+  id: string;
+  name: string;
+}
 
 interface FilterBarProps {
   searchQuery: string;
@@ -11,6 +18,9 @@ interface FilterBarProps {
   showFavoritesOnly: boolean;
   onToggleFavorites: () => void;
   onOpenCreateModal?: () => void;
+  owners?: OwnerOption[];
+  selectedOwner?: string;
+  onOwnerChange?: (ownerId: string) => void;
 }
 
 export const FilterBar: React.FC<FilterBarProps> = ({
@@ -20,12 +30,16 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   onSortChange,
   showFavoritesOnly,
   onToggleFavorites,
-  onOpenCreateModal
+  onOpenCreateModal,
+  owners,
+  selectedOwner,
+  onOwnerChange,
 }) => {
+  const { user } = useAuth();
   return (
     <div className={styles.filterBar}>
       <div className={styles.filterTopRow}>
-        <button className="btn-primary" onClick={onOpenCreateModal} >
+        <button className="btn-primary" onClick={onOpenCreateModal} type="button">
           <PlusCircle size={16} />
         </button>
         <div className={styles.searchWrapper}>
@@ -53,6 +67,24 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             Favorites Only
           </button>
 
+          {user.role === ROLES.MASTER && owners && owners.length > 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <User size={16} style={{ color: 'var(--text-subtle)' }} />
+              <select
+                className={styles.customSelect}
+                value={selectedOwner || 'all'}
+                onChange={(e) => onOwnerChange && onOwnerChange(e.target.value)}
+              >
+                <option value="all">All Owners</option>
+                {owners.map((owner) => (
+                  <option key={owner.id} value={owner.id}>
+                    {owner.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <SortAsc size={16} style={{ color: 'var(--text-subtle)' }} />
             <select
@@ -63,6 +95,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               <option value="level-desc">Highest Level</option>
               <option value="name-asc">Name (A-Z)</option>
               <option value="name-desc">Name (Z-A)</option>
+              {user.role === ROLES.MASTER && <><option value="owner-asc">Owner (A-Z)</option>
+                <option value="owner-desc">Owner (Z-A)</option></>}
             </select>
           </div>
         </div>

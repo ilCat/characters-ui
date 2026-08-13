@@ -18,6 +18,8 @@ export interface Character {
   stats?: Stats;
   isFavorite: boolean;
   teamId?: number;
+  ownerId?: number;
+  ownerName?: string;
 }
 
-export type SortOption = 'level-desc' | 'name-asc' | 'name-desc';
+export type SortOption = 'level-desc' | 'name-asc' | 'name-desc' | 'owner-asc' | 'owner-desc';
