@@ -136,7 +136,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onRegisterSuccess })
                 id="register-password"
                 type="password"
                 className={styles.authInput}
-                placeholder="At least 6 characters"
+                placeholder="At least 8 characters"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isLoading}

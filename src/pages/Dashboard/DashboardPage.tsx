@@ -8,12 +8,9 @@ import { CharacterFormModal } from '../../components/CharacterFormModal/Characte
 import { useAuth } from '../../context/AuthContext';
 import { Header } from '../../components/Header/Header';
 import { useNotification } from '../../context/NotificationContext';
+import { ROLES } from '../../services/utils';
 
-interface DashboardPageProps {
-  onOpenCreateModalSignal?: boolean;
-}
-
-export const DashboardPage: React.FC<DashboardPageProps> = () => {
+export const DashboardPage: React.FC = () => {
   const { user, loading, logout } = useAuth();
   const { showError, showSuccess } = useNotification();
   const [characters, setCharacters] = useState<Character[]>([]);
@@ -27,14 +24,13 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
   const [editingCharacter, setEditingCharacter] = useState<Character | null>(null);
 
   useEffect(() => {
-    if (!user?.ownedTeamId) return;
-
     const fetchCharacters = async () => {
       const teamId = user?.ownedTeamId;
+      const role = user?.role;
       try {
-        const data = teamId
-          ? await characterService.getAllByTeam(teamId)
-          : await characterService.getAll();
+        const data = role === ROLES.MASTER
+          ? await characterService.getAll()
+          : teamId ? await characterService.getAllByTeam(teamId) : [];
         if (Array.isArray(data)) {
           setCharacters(data);
         }
