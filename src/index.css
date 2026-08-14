@@ -148,3 +148,17 @@ h6 {
   background: var(--bg-card-hover);
   border-color: rgba(255, 255, 255, 0.15);
 }
+
+/* Spinner Animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin-icon {
+  animation: spin 1s linear infinite;
+}
