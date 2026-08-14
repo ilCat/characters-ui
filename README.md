@@ -39,3 +39,38 @@ This application provides an interactive experience where users can browse, mana
    npm run dev
    ```
    *Note: Vite config is pre-configured with a local development proxy forwarding `/api` to `http://localhost:8080`.*
+
+---
+
+## Running Full Stack with Docker Compose
+
+You can run both the **Frontend (`characters-ui`)** and **Backend (`characters-api`)** together in production mode using Docker Compose from the sibling `characters-api` directory.
+
+### Quick Start
+
+0. Make sure both repositories are at the same level like this:
+   ```
+   my_characters_project/
+   ├── characters-api/
+   └── characters-ui/
+   ```
+
+1. **Navigate to the `characters-api` folder**:
+   ```bash
+   cd ../characters-api
+   ```
+
+2. **Build and start all services**:
+   ```bash
+   docker compose up -d --build
+   ```
+
+3. **Access the application**:
+   - **Web UI**: [http://localhost](http://localhost) (Served via Nginx on Port 80)
+   - **FastAPI Docs**: [http://localhost:8080/docs](http://localhost:8080/docs) (Swagger UI on Port 8080)
+
+4. **Stop the environment**:
+   ```bash
+   docker compose down
+   ```
+
