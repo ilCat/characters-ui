@@ -10,6 +10,8 @@ import { Header } from '../../components/Header/Header';
 import { useNotification } from '../../context/NotificationContext';
 import { ROLES } from '../../services/utils';
 
+import styles from './DashboardPage.module.css';
+
 export const DashboardPage: React.FC = () => {
   const { user, logout } = useAuth();
   const { showError, showSuccess } = useNotification();
@@ -162,27 +164,29 @@ export const DashboardPage: React.FC = () => {
   }, [characters, searchQuery, sortOption, showFavoritesOnly, selectedOwner]);
 
   return (
-    <>
-      <Header
-        characters={characters}
-        user={user}
-        onLogout={logout}
-      />
-      <FilterBar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        sortOption={sortOption}
-        onSortChange={setSortOption}
-        showFavoritesOnly={showFavoritesOnly}
-        onToggleFavorites={() => setShowFavoritesOnly(!showFavoritesOnly)}
-        owners={ownersOptions}
-        selectedOwner={selectedOwner}
-        onOwnerChange={setSelectedOwner}
-        onOpenCreateModal={() => {
-          setEditingCharacter(null);
-          setIsFormOpen(true);
-        }}
-      />
+    <div className={styles.dashboardContainer}>
+      <div className={styles.stickyTopSection}>
+        <Header
+          characters={characters}
+          user={user}
+          onLogout={logout}
+        />
+        <FilterBar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          sortOption={sortOption}
+          onSortChange={setSortOption}
+          showFavoritesOnly={showFavoritesOnly}
+          onToggleFavorites={() => setShowFavoritesOnly(!showFavoritesOnly)}
+          owners={ownersOptions}
+          selectedOwner={selectedOwner}
+          onOwnerChange={setSelectedOwner}
+          onOpenCreateModal={() => {
+            setEditingCharacter(null);
+            setIsFormOpen(true);
+          }}
+        />
+      </div>
 
       <CharacterGrid
         characters={filteredCharacters}
@@ -215,6 +219,6 @@ export const DashboardPage: React.FC = () => {
         onSave={handleSaveCharacter}
         editingCharacter={editingCharacter}
       />
-    </>
+    </div>
   );
 };
