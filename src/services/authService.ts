@@ -1,12 +1,10 @@
 import type { User, LoginCredentials, RegisterCredentials } from '../types/auth';
 import { API_BASE, parseApiError } from './utils';
-
+import { apiFetch } from './apiClient';
 
 export const authService = {
   getCurrentUser: async (): Promise<User | null> => {
-    const data = await fetch(`${API_BASE}/api/auth/me`, {
-      credentials: 'include',
-    });
+    const data = await apiFetch(`${API_BASE}/api/auth/me`);
     if (!data.ok) return null;
     try {
       return await data.json();
@@ -28,9 +26,7 @@ export const authService = {
       const errorMsg = await parseApiError(res, 'Failed to login');
       throw new Error(errorMsg);
     }
-    const data = await fetch(`${API_BASE}/api/auth/me`, {
-      credentials: 'include',
-    });
+    const data = await apiFetch(`${API_BASE}/api/auth/me`);
     if (!data.ok) {
       const errorMsg = await parseApiError(data, 'Failed to fetch user profile');
       throw new Error(errorMsg);
@@ -74,12 +70,11 @@ export const authService = {
   },
 
   logout: async (): Promise<void> => {
-    const res = await fetch(`${API_BASE}/api/auth/logout`, {
+    const res = await apiFetch(`${API_BASE}/api/auth/logout`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      credentials: 'include',
     });
     if (!res.ok) {
       const errorMsg = await parseApiError(res, 'Failed to logout');
