@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Header } from './components/Header/Header';
 import { DashboardPage } from './pages/Dashboard/DashboardPage';
 import { LoginPage } from './pages/Login/LoginPage';
 import { RegisterPage } from './pages/Register/RegisterPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import type { Character } from './types/character';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 import { NotificationProvider } from './context/NotificationContext';

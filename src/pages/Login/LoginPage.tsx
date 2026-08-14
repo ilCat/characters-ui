@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, LogIn, Shield, Sparkles, UserCheck, AlertCircle } from 'lucide-react';
+import { Mail, Lock, LogIn, Shield, AlertCircle } from 'lucide-react';
 import type { User } from '../../types/auth';
 import { useAuth } from '../../context/AuthContext';
 import styles from './LoginPage.module.css';

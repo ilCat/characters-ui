@@ -67,7 +67,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             Favorites Only
           </button>
 
-          {user.role === ROLES.MASTER && owners && owners.length > 0 && (
+          {user?.role === ROLES.MASTER && owners && owners.length > 0 && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <User size={16} style={{ color: 'var(--text-subtle)' }} />
               <select
@@ -95,7 +95,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               <option value="level-desc">Highest Level</option>
               <option value="name-asc">Name (A-Z)</option>
               <option value="name-desc">Name (Z-A)</option>
-              {user.role === ROLES.MASTER && <><option value="owner-asc">Owner (A-Z)</option>
+              {user?.role === ROLES.MASTER && <><option value="owner-asc">Owner (A-Z)</option>
                 <option value="owner-desc">Owner (Z-A)</option></>}
             </select>
           </div>

@@ -28,7 +28,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
 
         <button
           className={`${styles.favBtn} ${character.isFavorite ? styles.favBtnActive : ''}`}
-          onClick={(e) => onToggleFavorite && onToggleFavorite(character.id, e)}
+          onClick={(e) => onToggleFavorite && character.id != null && onToggleFavorite(character.id, e)}
           title={character.isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
           type="button"
         >
@@ -40,7 +40,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
         <div className={styles.cardHeaderInfo}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span className={styles.charTitleSmall}>Lv. {character.level}</span>
-            {user.role === ROLES.MASTER && character.ownerName && (
+            {user?.role === ROLES.MASTER && character.ownerName && (
               <span className={styles.ownerBadge} title={`Owner: ${character.ownerName}`}>
                 <User size={12} />
                 {character.ownerName}

@@ -49,7 +49,7 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({
           <div style={{ display: 'flex', gap: 10, marginTop: 8 }}>
             <button
               className={`btn-secondary ${character.isFavorite ? 'active' : ''}`}
-              onClick={() => onToggleFavorite(character.id)}
+              onClick={() => character.id != null && onToggleFavorite(character.id)}
               type="button"
             >
               <Star size={16} fill={character.isFavorite ? '#ef4444' : 'none'} color={character.isFavorite ? '#ef4444' : 'currentColor'} />
@@ -62,7 +62,7 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({
             <button
               className="btn-secondary"
               style={{ color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.3)' }}
-              onClick={() => onDelete(character.id)}
+              onClick={() => character.id != null && onDelete(character.id)}
               type="button"
             >
               <Trash2 size={16} />

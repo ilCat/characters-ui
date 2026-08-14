@@ -10,28 +10,30 @@ interface CharacterFormModalProps {
   editingCharacter?: Character | null;
 }
 
+const emptyCharacter: Omit<Character, 'id'> = {
+  name: '',
+  level: 1,
+  avatar: '',
+  stats: { wins: 0, loses: 0, draws: 0 },
+  height: 170,
+  weight: 70,
+  birthYear: 1995,
+  isFavorite: false,
+};
+
 export const CharacterFormModal: React.FC<CharacterFormModalProps> = ({
   isOpen,
   onClose,
   onSave,
   editingCharacter,
 }) => {
-  const [formData, setFormData] = useState<Partial<Character>>({
-    name: '',
-    level: 1,
-    avatar: '',
-    stats: { wins: 0, loses: 0, draws: 0 },
-  });
+  const [formData, setFormData] = useState<Character>(emptyCharacter);
 
   useEffect(() => {
     if (editingCharacter) {
       setFormData(editingCharacter);
     } else {
-      setFormData({
-        name: '',
-        level: 50,
-        stats: { wins: 0, loses: 0, draws: 0 },
-      });
+      setFormData(emptyCharacter);
     }
   }, [editingCharacter, isOpen]);
 
@@ -62,15 +64,15 @@ export const CharacterFormModal: React.FC<CharacterFormModalProps> = ({
     onClose();
   };
 
-  const characterEditForm = [{ label: "Name", type: "text", value: formData.name, onChange: (e) => setFormData({ ...formData, name: e.target.value }) },
-  { label: "Height (cm)", type: "number", min: 150, max: 250, value: formData.height, onChange: (e) => setFormData({ ...formData, height: parseInt(e.target.value) || 150 }) },
-  { label: "Weight (kg)", type: "number", min: 30, max: 200, value: formData.weight, onChange: (e) => setFormData({ ...formData, weight: parseInt(e.target.value) || 30 }) },
-  { label: "Birth Year", type: "number", min: 1900, max: 2009, value: formData.birthYear, onChange: (e) => setFormData({ ...formData, birthYear: e.target.value || 1994 }) },
-  { label: "Level", type: "number", min: 1, max: 100, value: formData.level, onChange: (e) => setFormData({ ...formData, level: parseInt(e.target.value) || 1 }) },
-  { label: "Avatar", type: "url", value: formData.avatar, onChange: (e) => setFormData({ ...formData, avatar: e.target.value }) },
-  { label: "Wins", type: "number", min: 0, max: 1000, value: formData.stats.wins, onChange: (e) => setFormData({ ...formData, stats: { wins: parseInt(e.target.value) || 0, loses: formData.stats.loses, draws: formData.stats.draws } }) },
-  { label: "Loses", type: "number", min: 0, max: 1000, value: formData.stats.loses, onChange: (e) => setFormData({ ...formData, stats: { wins: formData.stats.wins, loses: parseInt(e.target.value) || 0, draws: formData.stats.draws } }) },
-  { label: "Draws", type: "number", min: 0, max: 1000, value: formData.stats.draws, onChange: (e) => setFormData({ ...formData, stats: { wins: formData.stats.wins, loses: formData.stats.loses, draws: parseInt(e.target.value) || 0 } }) }
+  const characterEditForm = [{ label: "Name", type: "text", value: formData.name, onChange: (e: any) => setFormData({ ...formData, name: e.target.value }) },
+  { label: "Height (cm)", type: "number", min: 150, max: 250, value: formData.height, onChange: (e: any) => setFormData({ ...formData, height: parseInt(e.target.value) || 150 }) },
+  { label: "Weight (kg)", type: "number", min: 30, max: 200, value: formData.weight, onChange: (e: any) => setFormData({ ...formData, weight: parseInt(e.target.value) || 30 }) },
+  { label: "Birth Year", type: "number", min: 1900, max: 2009, value: formData.birthYear, onChange: (e: any) => setFormData({ ...formData, birthYear: e.target.value || 1994 }) },
+  { label: "Level", type: "number", min: 1, max: 100, value: formData.level, onChange: (e: any) => setFormData({ ...formData, level: parseInt(e.target.value) || 1 }) },
+  { label: "Avatar", type: "url", value: formData.avatar, onChange: (e: any) => setFormData({ ...formData, avatar: e.target.value }) },
+  { label: "Wins", type: "number", min: 0, max: 1000, value: formData.stats.wins, onChange: (e: any) => setFormData({ ...formData, stats: { wins: parseInt(e.target.value) || 0, loses: formData.stats.loses, draws: formData.stats.draws } }) },
+  { label: "Loses", type: "number", min: 0, max: 1000, value: formData.stats.loses, onChange: (e: any) => setFormData({ ...formData, stats: { wins: formData.stats.wins, loses: parseInt(e.target.value) || 0, draws: formData.stats.draws } }) },
+  { label: "Draws", type: "number", min: 0, max: 1000, value: formData.stats.draws, onChange: (e: any) => setFormData({ ...formData, stats: { wins: formData.stats.wins, loses: formData.stats.loses, draws: parseInt(e.target.value) || 0 } }) }
   ]
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
@@ -95,11 +97,11 @@ export const CharacterFormModal: React.FC<CharacterFormModalProps> = ({
                 <label className={styles.formLabel}>{item.label}</label>
                 <input
                   className={styles.formInput}
-                  disabled={editingCharacter && (item.label === "Name" || item.label === "Height (cm)" || item.label === "Weight (kg)" || item.label === "Birth Year")}
+                  disabled={editingCharacter !== null && (item.label === "Name" || item.label === "Height (cm)" || item.label === "Weight (kg)" || item.label === "Birth Year")}
                   type={item.type}
                   min={item?.min}
                   max={item?.max}
-                  value={item?.value}
+                  value={item.value ? item.value : undefined}
                   onChange={item.onChange}
                 />
               </div>

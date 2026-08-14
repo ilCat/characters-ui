@@ -1,21 +1,20 @@
 
 
 export interface Stats {
-  wins?: number;
-  loses?: number;
-  draws?: number;
-  [key: string]: number | undefined;
+  wins: number;
+  loses: number;
+  draws: number;
 }
 
 export interface Character {
-  id: number;
+  id?: number | null;
   name: string;
   height?: number | string;
   weight?: number | string;
   birthYear?: number | string;
-  level?: number;
-  avatar?: string;
-  stats?: Stats;
+  level: number;
+  avatar?: string | null;
+  stats: Stats;
   isFavorite: boolean;
   teamId?: number;
   ownerId?: number;

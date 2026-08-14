@@ -3,13 +3,13 @@ import { API_BASE, parseApiError } from './utils';
 
 
 export const authService = {
-  getCurrentUser: async (): Promise<User> => {
+  getCurrentUser: async (): Promise<User | null> => {
     const data = await fetch(`${API_BASE}/api/auth/me`, {
       credentials: 'include',
     });
     if (!data.ok) return null;
     try {
-      return data.json();
+      return await data.json();
     } catch {
       return null;
     }
@@ -31,11 +31,15 @@ export const authService = {
     const data = await fetch(`${API_BASE}/api/auth/me`, {
       credentials: 'include',
     });
-    if (!data.ok) return null;
+    if (!data.ok) {
+      const errorMsg = await parseApiError(data, 'Failed to fetch user profile');
+      throw new Error(errorMsg);
+    }
     try {
-      return data.json();
+      return await data.json();
     } catch {
-      return null;
+      const errorMsg = await parseApiError(data, 'Failed to parse user profile');
+      throw new Error(errorMsg);
     }
   },
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Shield, PlusCircle, Star, Sparkles, LogOut, User as UserIcon } from 'lucide-react';
+import { Shield, PlusCircle, Star, Sparkles, LogOut } from 'lucide-react';
 import type { Character } from '../../types/character';
 import type { User } from '../../types/auth';
 import styles from './Header.module.css';
